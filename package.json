@@ -1,6 +1,6 @@
 {
   "name": "idebut-xr-packages",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Packages for idebut XR",
   "main": "./dist/index.js",
   "scripts": {
@@ -8,6 +8,11 @@
     "build": "webpack build --mode development"
   },
   "author": "Yuki Hamanaka <yuki.hamanaka@10share.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mmooccii/idebut-xr-packages/issues"
+  },
+  "homepage": "https://github.com/mmooccii/idebut-xr-packages",
   "devDependencies": {
     "@types/lodash": "^4.14.182",
     "ts-loader": "^9.3.1",

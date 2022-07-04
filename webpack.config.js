@@ -11,6 +11,7 @@ module.exports = {
 			},
 		],
 	},
+	externals: ['lodash'],
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js'],
 	},
