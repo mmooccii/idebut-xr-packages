@@ -1,17 +1,12 @@
 import * as localforage from 'localforage';
 import { Logger } from 'aws-amplify';
 
-import {
-	setCookies,
-	getCookies,
-	removeCookies,
-	deleteCookie,
-} from 'cookies-next';
+import { setCookie, getCookies, deleteCookie } from 'cookies-next';
 
 import { OptionsType, TmpCookiesObj } from 'cookies-next/lib/types';
 import { CookieSerializeOptions } from 'cookie';
 
-import { get as getValue, set as setValue } from 'lodash';
+import { get as getValue, set as setValue, unset as unsetValue } from 'lodash';
 
 let localForage: LocalForage = localforage;
 
@@ -70,21 +65,23 @@ export default class IdebutStorage {
 		const _ = this;
 		_.logger.debug('remove item ', key);
 
-		delete this.memory[key];
-		removeCookies(key, this.ctx);
+		unsetValue(this.memory, key);
+		this.logger.debug('remove item', this.memory);
+		deleteCookie(key, this.ctx);
 		return Promise.all([_.asyncRemoveStoreItem(key)])
-			.then(() => {})
+			.then((r: any) => {
+				console.log(r);
+			})
 			.catch(err => _.logger.error(err));
 	}
 
-	async asyncRemoveStoreItem(key: string) {
+	async asyncRemoveStoreItem(key: string): Promise<void> {
 		try {
+			if (this.store) await this.store.removeItem(key);
 			this.logger.debug('async remove item ', key);
-			if (this.store) return await this.store.removeItem(key);
 		} catch (e) {
 			this.logger.error(e);
 		}
-		return null;
 	}
 
 	clear() {
@@ -138,7 +135,7 @@ export default class IdebutStorage {
 			case 'accessToken':
 			case 'refreshToken':
 			case 'idToken':
-				setCookies(key, value, { ..._.options, ..._.ctx });
+				setCookie(key, value, { ..._.options, ..._.ctx });
 		}
 	}
 

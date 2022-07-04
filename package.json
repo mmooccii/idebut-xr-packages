@@ -1,11 +1,11 @@
 {
   "name": "idebut-xr-packages",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Packages for idebut XR",
   "main": "./dist/index.js",
   "scripts": {
-    "production": "webpack build --mode production",
-    "build": "webpack build --mode development"
+    "production": "$(npm bin)/webpack build --mode production",
+    "build": "$(npm bin)/webpack build --mode development"
   },
   "author": "Yuki Hamanaka <yuki.hamanaka@10share.com>",
   "license": "ISC",
