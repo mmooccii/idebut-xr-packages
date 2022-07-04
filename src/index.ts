@@ -1,3 +1,3 @@
-import idebutXRStorage from './Storage';
+import IdebutStorage from './Storage';
 
-export { idebutXRStorage };
+export { IdebutStorage };

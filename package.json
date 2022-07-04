@@ -4,6 +4,7 @@
   "description": "Packages for idebut XR",
   "main": "./dist/index.js",
   "scripts": {
+    "production": "webpack build --mode production",
     "build": "webpack build --mode development"
   },
   "author": "Yuki Hamanaka <yuki.hamanaka@10share.com>",
