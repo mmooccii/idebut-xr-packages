@@ -13,11 +13,13 @@ import { get as getValue, set as setValue, unset as unsetValue } from 'lodash'
 let localForage: LocalForage = localforage
 
 const { isBrowser } = browserOrNode()
+const CookiePrefix = 'CognitoIdentityServiceProvider'
 
 export default class IdebutStorage {
   memory: { [key: string]: string }
   options: CookieSerializeOptions
   store: null | LocalForage
+  cookie_prefix: string
   ctx: OptionsType
   logger: Logger
   constructor(ctx: any) {
@@ -38,6 +40,12 @@ export default class IdebutStorage {
       this.ctx = {}
     } else {
       this.ctx = rest
+    }
+
+    if (ctx.cookie_prefix) {
+      this.cookie_prefix = `${CookiePrefix}.${ctx.cookie_prefix}`
+    } else {
+      this.cookie_prefix = `${CookiePrefix}`
     }
 
     this.logger = new Logger('iDebut Storage')
@@ -117,13 +125,15 @@ export default class IdebutStorage {
   setLocalItem(key: string, value: any) {
     const _ = this
     setValue(_.memory, key, value)
-    const tokenType = key.split('.').pop()
-    switch (tokenType) {
-      case 'LastAuthUser':
-      case 'accessToken':
-      case 'refreshToken':
-      case 'idToken':
-        setCookie(key, value, { ..._.options, ..._.ctx })
+    if (key.startsWith(_.cookie_prefix)) {
+      const tokenType = key.split('.').pop()
+      switch (tokenType) {
+        case 'LastAuthUser':
+        case 'accessToken':
+        case 'refreshToken':
+        case 'idToken':
+          setCookie(key, value, { ..._.options, ..._.ctx })
+      }
     }
   }
 
