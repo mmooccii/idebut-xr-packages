@@ -1,3 +1,3 @@
-import IdebutStorage from './Storage';
-
-export { IdebutStorage };
+import IdebutStorage from './Storage'
+import LocalStorage from './LocalStorage'
+export { IdebutStorage, LocalStorage }
