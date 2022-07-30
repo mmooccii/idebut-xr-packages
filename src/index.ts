@@ -1,3 +1,4 @@
 import IdebutStorage from './Storage'
 import LocalStorage from './LocalStorage'
-export { IdebutStorage, LocalStorage }
+import RecordLog from './RecordLog'
+export { IdebutStorage, LocalStorage, RecordLog }
