@@ -1,6 +1,6 @@
 {
   "name": "idebut-xr-packages",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Packages for idebut XR",
   "main": "./dist/index.js",
   "scripts": {
