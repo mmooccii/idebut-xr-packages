@@ -16,11 +16,14 @@ export default class RecordLog {
       _w: this.screen.width,
       _h: this.screen.height,
       _p: this.screen.pixelDepth,
-      msg: typeof message === 'string' ? message : JSON.stringify(message),
+      msg:
+        typeof message === 'string'
+          ? message
+          : encodeURIComponent(JSON.stringify(message)),
     }
 
     return fetch(`${this.server}?${queryString.stringify(info)}`).then((res) =>
-      console.log(res.json())
+      res.json()
     )
   }
 }
