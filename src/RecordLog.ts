@@ -17,7 +17,7 @@ export default class RecordLog {
       name: 'idebut-xr-2022',
     })
   }
-  send(message: string | object): object {
+  send(message: string | object, authKey: string = null): object {
     const _ = this
     const info: object = {
       m: this.navigator.mimeTypes.length,
@@ -31,7 +31,14 @@ export default class RecordLog {
           : encodeURIComponent(JSON.stringify(message)),
     }
 
-    return fetch(`${this.server}?${queryString.stringify(info)}`)
+    const headers: Headers = new Headers()
+    if (authKey) {
+      headers.append('Authorization', 'Bearer ' + authKey)
+    }
+
+    return fetch(`${this.server}?${queryString.stringify(info)}`, {
+      ...(headers && { headers }),
+    })
       .then((res: any) => res.json())
       .then(({ __seck, empty, err }) => {
         if ((empty && empty === true) || err) {
