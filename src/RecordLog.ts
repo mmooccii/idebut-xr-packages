@@ -1,15 +1,24 @@
+import * as localforage from 'localforage'
+let localForage: LocalForage = localforage
+
 const queryString = require('query-string')
 
 export default class RecordLog {
+  store: LocalForage
   screen: Screen
   navigator: Navigator
-  server: String
+  server: string
+  keyname: string = '__idebutxrkey__'
   constructor(window: Window, server: string) {
     this.screen = window.screen
     this.navigator = window.navigator
     this.server = server
+    this.store = localforage.createInstance({
+      name: 'idebut-xr-2022',
+    })
   }
   send(message: string | object): object {
+    const _ = this
     const info: object = {
       m: this.navigator.mimeTypes.length,
       p: this.navigator.plugins.length,
@@ -22,8 +31,23 @@ export default class RecordLog {
           : encodeURIComponent(JSON.stringify(message)),
     }
 
-    return fetch(`${this.server}?${queryString.stringify(info)}`).then((res) =>
-      res.json()
-    )
+    return fetch(`${this.server}?${queryString.stringify(info)}`)
+      .then((res: any) => res.json())
+      .then(({ __seck, empty, err }) => {
+        if ((empty && empty === true) || err) {
+          return Promise.resolve(null)
+        }
+        return _.store.setItem(_.keyname, __seck)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  }
+  async getKey() {
+    let value: string = ''
+    if (this.store) {
+      value = await this.store.getItem(this.keyname)
+    }
+    return value
   }
 }
