@@ -19,36 +19,39 @@ export default class RecordLog {
   }
   send(message: string | object, authKey: string = null): object {
     const _ = this
-    const info: object = {
-      m: this.navigator.mimeTypes.length,
-      p: this.navigator.plugins.length,
-      _w: this.screen.width,
-      _h: this.screen.height,
-      _p: this.screen.pixelDepth,
-      msg:
-        typeof message === 'string'
-          ? message
-          : encodeURIComponent(JSON.stringify(message)),
-    }
+    return _.getKey().then((key: string) => {
+      const info: object = {
+        m: _.navigator.mimeTypes.length,
+        p: _.navigator.plugins.length,
+        _w: _.screen.width,
+        _h: _.screen.height,
+        _p: _.screen.pixelDepth,
+        ...(key.length > 0 && { __seck: key }),
+        msg:
+          typeof message === 'string'
+            ? message
+            : encodeURIComponent(JSON.stringify(message)),
+      }
 
-    const headers: Headers = new Headers()
-    if (authKey) {
-      headers.append('Authorization', 'Bearer ' + authKey)
-    }
+      const headers: Headers = new Headers()
+      if (authKey) {
+        headers.append('Authorization', 'Bearer ' + authKey)
+      }
 
-    return fetch(`${this.server}?${queryString.stringify(info)}`, {
-      ...(headers && { headers }),
+      return fetch(`${this.server}?${queryString.stringify(info)}`, {
+        ...(headers && { headers }),
+      })
+        .then((res: any) => res.json())
+        .then(({ __seck, empty, err }) => {
+          if ((empty && empty === true) || err) {
+            return Promise.resolve(null)
+          }
+          return _.store.setItem(_.keyname, __seck)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
     })
-      .then((res: any) => res.json())
-      .then(({ __seck, empty, err }) => {
-        if ((empty && empty === true) || err) {
-          return Promise.resolve(null)
-        }
-        return _.store.setItem(_.keyname, __seck)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
   }
   async getKey() {
     let value: string = ''
